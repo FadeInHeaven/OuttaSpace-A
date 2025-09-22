@@ -1,4 +1,4 @@
-# Project: Emergnecy Cloud Camera Capture (Outtaspace)
+# Project: Emergency Cloud Camera Capture (Outtaspace)
 
 A web-based application that allows users to capture photos and videos directly to the cloud, designed specifically for situations where the user's phone storage is full.
 
