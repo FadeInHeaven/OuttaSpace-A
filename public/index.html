@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Outtaspace - Emergency Cloud Camera</title>
+    <link rel="stylesheet" href="style.css">
+    <!-- Web App Manifest -->
+    <link rel="manifest" href="manifest.json">
+    <!-- iOS support -->
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="Outtaspace">
+    <link rel="apple-touch-icon" href="images/icon-192x192.png">
+</head>
+<body>
+    <!-- Live camera viewfinder -->
+    <video id="viewfinder" autoplay playsinline muted></video>
+
+    <!-- Hidden canvas for capturing still photos -->
+    <canvas id="photo-canvas" style="display: none;"></canvas>
+
+    <!-- UI Controls Overlay -->
+    <div class="controls-overlay">
+        <!-- Top controls: Flash and Camera Flip -->
+        <div class="top-controls">
+            <button id="flash-toggle" class="control-button" aria-label="Toggle Flash">
+                <!-- SVG Icon for Flash Off -->
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18.5 12.5 12 20l-1.5-1.5"></path><path d="m5.5 5.5 6 6"></path><path d="m2 2 20 20"></path><path d="M14 2a2 2 0 0 1 2 2v2h-4V4a2 2 0 0 1 2-2Z"></path><path d="M4 14a2 2 0 0 1 2-2h1.5l1 1L10 14h-4Z"></path></svg>
+            </button>
+            <button id="camera-flip" class="control-button" aria-label="Flip Camera">
+                <!-- SVG Icon for Camera Flip -->
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 19H4a2 2 0 0 1-2-2V7a2 2 0 0 1 2-2h5"></path><path d="M14 5h7a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2h-1"></path><path d="m17 12-3-3 3-3"></path><path d="m7 12 3 3-3 3"></path></svg>
+            </button>
+        </div>
+
+        <!-- Main Shutter/Record Button -->
+        <div class="shutter-container">
+             <button id="shutter-button" class="shutter-button" aria-label="Take Photo or Start/Stop Video Recording"></button>
+             <div id="recording-indicator" class="recording-indicator"></div>
+        </div>
+    </div>
+
+    <!-- Status Overlay -->
+    <div id="status-overlay" class="status-overlay">
+        <div id="status-message" class="status-message"></div>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>
