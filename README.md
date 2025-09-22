@@ -1,4 +1,4 @@
-# Project: Emergency Camera Cloud Capture (ECCC)
+# Project: Emergnecy Cloud Camera Capture (Outtaspace)
 
 A web-based application that allows users to capture photos and videos directly to the cloud, designed specifically for situations where the user's phone storage is full.
 
@@ -7,7 +7,7 @@ A web-based application that allows users to capture photos and videos directly 
 ## Core Problem & Solution
 
 * **Problem:** You're in an urgent situation and need to take a photo or video, but your phone displays the dreaded "Storage Full" error, preventing you from using your camera.
-* **Solution:** ECCC provides a simple webpage (PWA) that uses the browser's built-in camera APIs to capture media and immediately upload it to a secure cloud server, completely bypassing the device's local storage.
+* **Solution:** Outtaspace provides a simple webpage (PWA) that uses the browser's built-in camera APIs to capture media and immediately upload it to a secure cloud server, completely bypassing the device's local storage.
 
 ***
 
