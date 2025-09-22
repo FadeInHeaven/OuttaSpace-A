@@ -36,7 +36,7 @@ We are building the front-end with core web technologies to ensure maximum perfo
 * **PWA Features:**
     * `manifest.json`: To make the app installable ("Add to Home Screen").
     * `Service Worker`: To cache the main application files for offline access and instant loading.
-* **Local Development:** A local HTTPS server (e.g., using `mkcert` and Node.js's `http-server`) will be used for testing on mobile devices, as camera APIs require a secure context (`https`).
+* **Local Development:** A local HTTPS server (github.com/terreng/simple-web-server) will be used for testing on mobile devices, as camera APIs require a secure context (`https`).
 
 ***
 
@@ -79,3 +79,64 @@ Create a basic HTML5 boilerplate. The `<body>` will contain:
     * This function will take a `Blob` as an argument.
     * It will use the `Fetch API` to send the `Blob` to the backend endpoint via a `POST` request.
     * Update the UI to show upload progress and success/failure messages.
+
+***
+
+## Backend Implementation Plan (Supabase)
+
+For the backend, we will use **Supabase** to leverage its integrated suite of tools, which includes a database, authentication, storage, and serverless functions. This allows for rapid development and aligns perfectly with our goal of shipping a working MVP efficiently.
+
+### 1. Supabase Storage
+
+This is the core component for storing the actual media files.
+
+* **Setup:** We will create a single, **private** storage bucket named `media_uploads`. Making the bucket private is crucial, as it ensures that files can only be accessed via authorized, expiring URLs, not directly.
+* **Upload Flow:** To maintain security, the front-end will **not** upload directly to the bucket with a public API key. Instead, the client will first request a secure, signed upload URL from one of our Edge Functions. The function will generate a short-lived URL that grants permission to upload a single file, which the client will then use.
+
+### 2. Supabase Database (PostgreSQL)
+
+The database will not store the files themselves, but the **metadata** associated with them.
+
+* **Table Schema:** We'll create a primary table named `media_files` with the following columns:
+    * `id` (uuid, primary key)
+    * `user_id` (uuid, foreign key to `auth.users`)
+    * `file_path` (text, the path to the file in Supabase Storage)
+    * `content_type` (text, e.g., 'image/jpeg' or 'video/webm')
+    * `created_at` (timestamp with time zone)
+    * `expires_at` (timestamp with time zone)
+* **Row Level Security (RLS):** This is the most important database feature for us. We will enable RLS on the `media_files` table and create policies that enforce the rule: **"A user can only view, update, or delete records that match their own `user_id`."** This provides foundational security for our users' data.
+
+### 3. Supabase Auth
+
+To manage user identity and secure access to files, we'll use Supabase's built-in authentication.
+
+* **Method:** The primary authentication method will be **Magic Links** (passwordless email login). This perfectly fits our "Zero Friction" philosophy. A user wanting to view their files will simply enter their email address, click a link sent to their inbox, and be securely logged in without needing to remember a password.
+* **Integration:** When a user signs up or logs in, Supabase automatically creates an entry in the `auth.users` table. The `user_id` from this entry is the same one we'll use in our `media_files` table to associate uploads with a specific user.
+
+### 4. Supabase Edge Functions
+
+These serverless functions will handle our custom server-side logic. They are written in TypeScript and run on Deno.
+
+* `generate-upload-url`: As described in the Storage section, this function will be called by the client before an upload. It will generate a signed URL for the Storage bucket and return it to the client.
+* `cleanup-expired-files`: This will be set up as a **scheduled function** (cron job) to run automatically once a day. It will query the `media_files` table for any records where `expires_at` is in the past, and for each one it finds, it will delete both the database record and the corresponding file from Supabase Storage.
+
+***
+
+## Future Plans & Monetization
+
+The core mission of Outtaspace will always be to provide a free and reliable emergency capture tool. Future development and monetization will focus on adding value *after* the user's media has been safely captured, following a **freemium** model.
+
+### "Outtaspace Plus" (Premium Tier)
+
+Once the core MVP is stable, we plan to introduce an optional premium subscription with features designed for convenience and long-term storage:
+
+* **Permanent Cloud Storage:** Offer various storage tiers (e.g., 10GB, 50GB, 100GB) for users who want to turn Outtaspace into a permanent media backup solution.
+* **Higher Quality Captures:** Unlock the ability to record in higher resolutions like 4K video and capture lossless photos.
+* **Advanced Management:** Introduce features like creating albums, batch downloading files as a `.zip` archive, and searching/filtering captures.
+* **Automatic Cloud Sync:** A key premium feature to automatically and seamlessly transfer captures to a user's personal Google Drive, Dropbox, or OneDrive account.
+
+The free tier will always remain, offering temporary storage (e.g., 72 hours) to solve the core "storage full" emergency.
+
+### Alternative Models
+
+We may also explore simple, one-time payment options, such as a "Save Forever" button on individual files for a small fee, as an alternative to a recurring subscription. Our guiding principle is to **never add friction to the initial capture process.**
