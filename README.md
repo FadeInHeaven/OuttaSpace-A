@@ -140,3 +140,41 @@ The free tier will always remain, offering temporary storage (e.g., 72 hours) to
 ### Alternative Models
 
 We may also explore simple, one-time payment options, such as a "Save Forever" button on individual files for a small fee, as an alternative to a recurring subscription. Our guiding principle is to **never add friction to the initial capture process.**
+
+***
+
+## 🤖 Project Progress Checklist
+
+**Instructions for Gemini:** When asked to "lock in progress," update the status of the tasks below from `[ ]` to `[x]` based on the completed work in the session. Also, update the `Last Updated` timestamp.
+
+**Last Updated:** 2025-09-22 01:43 AM EDT
+
+---
+
+### Phase 1: Front-End Foundation (MVP)
+- [ ] **HTML:** Structure `index.html` with `<video>`, `<canvas>`, and UI control elements.
+- [ ] **CSS:** Style `style.css` for a full-screen camera view and responsive UI overlays.
+- [ ] **JS (Core Logic):** Implement initial `app.js` script loading and DOM element selection.
+
+### Phase 2: Core Functionality
+- [ ] **Camera Access:** Implement `getUserMedia` to display the live camera feed.
+- [ ] **Photo Capture:** Implement photo capture using the Canvas API.
+- [ ] **Video Capture:** Implement video recording using the `MediaRecorder` API.
+- [ ] **File Upload:** Create the placeholder `uploadFile(blob)` function.
+- [ ] **UI Feedback:** Add visual indicators for recording, uploading, and success states.
+
+### Phase 3: Back-End Setup (Supabase)
+- [ ] **Project Setup:** Create the Supabase project and link it locally.
+- [ ] **Storage:** Create the private `media_uploads` storage bucket.
+- [ ] **Database:** Define the `media_files` table schema and enable Row Level Security (RLS).
+- [ ] **Auth:** Configure Magic Link (passwordless) authentication.
+
+### Phase 4: Back-End Logic (Supabase Edge Functions)
+- [ ] **Function (`generate-upload-url`):** Create and deploy the Edge Function to provide secure upload URLs.
+- [ ] **Function (`cleanup-expired-files`):** Create and deploy the scheduled Edge Function for file cleanup.
+- [ ] **Integration:** Connect the front-end's `uploadFile` function to the `generate-upload-url` Edge Function.
+
+### Phase 5: PWA & Polish
+- [ ] **Manifest:** Create `manifest.json` with app icons and details for installability.
+- [ ] **Service Worker:** Implement a basic service worker for app shell caching (offline reliability).
+- [ ] **Wake Lock:** Integrate the Screen Wake Lock API to prevent the device from sleeping during recording.
